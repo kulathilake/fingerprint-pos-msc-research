@@ -5,7 +5,7 @@ A privacy-first, secure fingerprint-based point-of-sale payment research system 
 ## Overview
 
 This repository contains a prototype research implementation of a biometric POS system that uses fingerprint templates and verification while prioritizing privacy and security.
-The system also shards fingerprint data across multiple POS nodes, with each POS node acting as both a payment endpoint and a storage node.
+The system also shards fingerprint data across multiple POS nodes, with each POS node acting as both a payment endpoint and a verification node.
 
 Key goals:
 - Preserve biometric privacy with template protection and cache-aware processing
@@ -18,6 +18,7 @@ Key goals:
 ```text
 fingerprint-pos/
 ├── docker-compose.yml
+├── setup_dataset.sh          Downloads and extracts the fingerprint dataset
 ├── Dockerfile
 ├── pos-node/
 │   └── app.py                POS node API
@@ -41,7 +42,7 @@ fingerprint-pos/
 ## Setup
 
 1. Clone the repository.
-2. Download the FVC2002 dataset and place it inside the `fvc2002/` directory.
+2. Run `setup_dataset.sh` to download and extract the fingerprint dataset.
 3. Install dependencies:
    ```bash
    pip install -r requirements.txt
