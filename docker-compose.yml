@@ -1,0 +1,47 @@
+services:
+  coordinator:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  node1:
+    build: .
+    environment:
+      - NODE_ID=1
+      - COORDINATOR_HOST=coordinator
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    ports:
+      - "5001:5000"
+    depends_on: [coordinator]
+
+  node2:
+    build: .
+    environment:
+      - NODE_ID=2
+      - COORDINATOR_HOST=coordinator
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    ports:
+      - "5002:5000"
+    depends_on: [coordinator]
+
+  node3:
+    build: .
+    environment:
+      - NODE_ID=3
+      - COORDINATOR_HOST=coordinator
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    ports:
+      - "5003:5000"
+    depends_on: [coordinator]

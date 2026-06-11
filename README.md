@@ -45,7 +45,8 @@ fingerprint-pos/
 2. Run `setup_dataset.sh` to download and extract the fingerprint dataset.
 3. Install dependencies:
    ```bash
-   pip install -r requirements.txt
+   chmod +x ./setup_py.sh
+   ./setup_py.sh
    ```
 4. Optional: run with Docker:
    ```bash
