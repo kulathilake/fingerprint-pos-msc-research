@@ -6,9 +6,9 @@ from feature_extractor import extract_fixed_vector
 NODE_URLS = ["http://localhost:5001", "http://localhost:5002", "http://localhost:5003"]
 USED_NONCES = set()
 
-def verify_user(user_id, probe_vector):
-    nonce = secrets.token_hex(16)
-    timestamp = int(time.time())
+def verify_user(user_id, probe_vector, fixed_nonce=None, fixed_timestamp=None):
+    nonce = fixed_nonce if fixed_nonce is not None else secrets.token_hex(16)
+    timestamp = fixed_timestamp if fixed_timestamp is not None else int(time.time())
     if nonce in USED_NONCES:
         return False, "Replay: duplicate nonce"
     if abs(timestamp - int(time.time())) > 5:
@@ -31,6 +31,7 @@ def verify_user(user_id, probe_vector):
     secret = combine(shares[:2])
     xor_data = bytes(a ^ b for a, b in zip(secret, probe_vector))
     h_calc = hashlib.sha256(xor_data).digest().hex()
+    print(f"Verification for {user_id}: calculated hash {h_calc}, stored hash {stored_hash}")
     return (h_calc == stored_hash), "Authenticated" if h_calc == stored_hash else "Mismatch"
 
 def test_verification(folder, limit=10):

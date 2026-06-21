@@ -1,5 +1,5 @@
 import os
-import time, requests, statistics, subprocess, pickle
+import time, requests, statistics, secrets, pickle
 from feature_extractor import extract_fixed_vector
 from verify_client import verify_user
 
@@ -30,9 +30,11 @@ def test_centralised_latency(central_url, user_id, fingerprint_hex):
 
 # 3. Replay attack test
 def test_replay_attack():
+    nonce = secrets.token_hex(16)
+    timestamp = int(time.time())
     vec = extract_fixed_vector("./fvc2002/101_1.tif")
-    ok1, _ = verify_user("user_0", vec)
-    ok2, msg2 = verify_user("user_0", vec)   # same nonce – should fail
+    ok1, _ = verify_user("user_0", vec, fixed_nonce=nonce, fixed_timestamp=timestamp)
+    ok2, msg2 = verify_user("user_0", vec, fixed_nonce=nonce, fixed_timestamp=timestamp)   # same nonce – should fail
     print(f"Replay test: first={ok1}, second={ok2} -> {'PASS' if ok1 and not ok2 else 'FAIL'}")
     return ok1 and not ok2
 

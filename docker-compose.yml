@@ -13,7 +13,7 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 256M
+          memory: 128M
     ports:
       - "5001:5000"
     depends_on: [coordinator]
@@ -27,7 +27,7 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 256M
+          memory: 128M
     ports:
       - "5002:5000"
     depends_on: [coordinator]
@@ -41,7 +41,7 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 256M
+          memory: 128M
     ports:
       - "5003:5000"
     depends_on: [coordinator]

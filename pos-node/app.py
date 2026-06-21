@@ -42,5 +42,10 @@ def verify_get():
 def health():
     return "OK"
 
+@app.route('/debug/shard_store', methods=['GET'])
+def debug_shard_store():
+    """Debug endpoint to view the stored shares (not for production use)."""
+    return jsonify(shard_store)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

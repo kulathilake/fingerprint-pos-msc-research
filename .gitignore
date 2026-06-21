@@ -1,6 +1,6 @@
 # Ignore dataset files and archives
 /fvc2002/*.tif
-/fvc2002/DB1_B.zip
+/fvc2002/DB3_B.zip
 
 # Python environment
 venv/

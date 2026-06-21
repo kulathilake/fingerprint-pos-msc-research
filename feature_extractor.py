@@ -1,4 +1,6 @@
 import hashlib
+import json
+import os
 import cv2
 import fingerprint_feature_extractor
 
@@ -14,9 +16,32 @@ def extract_fixed_vector(image_path, vector_length=512):
     terminations, bifurcations = fingerprint_feature_extractor.extract_minutiae_features(img)
 
     # 2. Convert the minutiae set into a stable string representation
-    #    (ensure reproducibility: sort coordinates)
-    term_str = str(terminations)
-    bif_str = str(bifurcations)
+    # 2.1 Convert MinutiaeFeature objects to a sortable representation (tuples)
+    term_tuples = [(m.locX, m.locY, m.Orientation, m.Type) for m in terminations]
+    bif_tuples = [(m.locX, m.locY, m.Orientation, m.Type) for m in bifurcations]
+
+    features_file = 'fingerprint_features.json'
+    features_entry = {
+        'image': image_path,
+        'terminations': len(terminations),
+        'bifurcations': len(bifurcations)
+    }
+    if os.path.exists(features_file):
+        with open(features_file, 'r', encoding='utf-8') as f:
+            try:
+                existing = json.load(f)
+            except ValueError:
+                existing = []
+    else:
+        existing = []
+
+    existing.append(features_entry)
+    with open(features_file, 'w', encoding='utf-8') as f:
+        json.dump(existing, f, indent=2)
+
+    # 2.2 (ensure reproducibility: sort coordinates)
+    term_str = str(sorted(term_tuples))
+    bif_str = str(sorted(bif_tuples))
     combined = f"{term_str}{bif_str}".encode('utf-8')
 
     # 3. Hash to fixed length

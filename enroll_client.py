@@ -8,16 +8,17 @@ def enroll_user(user_id, fingerprint_vector):
     secret = secrets.token_bytes(32)
     xor_data = bytes(a ^ b for a, b in zip(secret, fingerprint_vector))
     h = hashlib.sha256(xor_data).digest().hex()
-    shares = split(secret, num_of_shares=3, threshold=2)   # returns list of bytearrays
+    shares = split(secret, 3, 2)   # returns list of bytearrays
 
-    for i, share_bytes in enumerate(shares):
-        payload = {
-            "user_id": user_id,
-            "share_hex": share_bytes.hex(),
-            "hash_hex": h
-        }
-        resp = requests.post(f"{NODE_URLS[i]}/enroll_share", json=payload, timeout=5)
-        resp.raise_for_status()
+    # for i, share_bytes in enumerate(shares):
+    #     payload = {
+    #         "user_id": user_id,
+    #         "share_index": i,
+    #         "share_hex": share_bytes.hex(),
+    #         "hash_hex": h
+    #     }
+    #     resp = requests.post(f"{NODE_URLS[i]}/enroll_share", json=payload, timeout=5)
+    #     resp.raise_for_status()
     print(f"Enrolled {user_id}")
     return True
 
