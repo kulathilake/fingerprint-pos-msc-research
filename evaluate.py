@@ -21,9 +21,11 @@ def test_decentralised_latency(folder, user_ids, probe_paths):
     return lat
 
 # 2. Centralised latency test
-def test_centralised_latency(central_url, user_id, fingerprint_hex):
+def test_centralised_latency(central_url, user_id, probe_path):
+    fingerprint_hex = extract_fixed_vector(probe_path).hex()
     def auth():
-        requests.post(f"{central_url}/verify", json={"user_id": user_id, "fingerprint_hex": fingerprint_hex})
+        res = requests.post(f"{central_url}/verify", json={"user_id": user_id, "fingerprint_hex": fingerprint_hex})
+        print (f"Centralised auth response: {res.json()}")
     lat = measure_latency(auth, n=30)
     print(f"Centralised latency (ms): mean={statistics.mean(lat):.2f}, median={statistics.median(lat):.2f}, 95th={statistics.quantiles(lat, n=20)[18]:.2f}")
     return lat
@@ -68,7 +70,9 @@ if __name__ == "__main__":
         dec_lat = test_decentralised_latency(folder, ["user_0"], [os.path.join(folder, files[0])])
         # Centralised test requires a pre‑enrolled user in the central DB. For simplicity, we skip or implement a one‑time enrollment.
         # Instead, run centralised separately.
+        cent_lat = test_centralised_latency("http://localhost:3000", "user_0", os.path.join(folder, files[0]))
         results["decentralised_latencies"] = dec_lat
+        results["centralised_latencies"] = cent_lat
     with open("eval_results.pkl", "wb") as f:
         pickle.dump(results, f)
     print("Evaluation done. Results saved to eval_results.pkl")

@@ -45,3 +45,15 @@ services:
     ports:
       - "5003:5000"
     depends_on: [coordinator]
+
+  centralized:
+    build:
+      context: .
+      dockerfile: Dockerfile.centralized
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
+    ports:
+      - "3000:5000"

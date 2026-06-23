@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import hashlib, secrets
+from feature_extractor import extract_fixed_vector
 
 app = Flask(__name__)
 db = {}
@@ -28,5 +29,18 @@ def verify():
     h_calc = hashlib.sha256(xor_data).digest().hex()
     return jsonify({"auth": h_calc == stored_hash})
 
+@app.route('/debug/store', methods=['GET'])
+def debug_shard_store():
+    return jsonify(db)
+
+@app.route('/debug/reset_store', methods=['POST'])
+def debug_reset_store():
+    db.clear()
+    return jsonify({"status": "store cleared"})
+
+@app.route('/eval/fingerprint_ops', methods=['GET'])
+def debug_shard_store():
+    return jsonify(db)
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=6000)
+    app.run(host='0.0.0.0', port=5000)

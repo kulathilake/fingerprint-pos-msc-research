@@ -44,8 +44,12 @@ def health():
 
 @app.route('/debug/shard_store', methods=['GET'])
 def debug_shard_store():
-    """Debug endpoint to view the stored shares (not for production use)."""
     return jsonify(shard_store)
+
+@app.route('/debug/reset_store', methods=['POST'])
+def debug_reset_store():
+    shard_store.clear()
+    return jsonify({"status": "shard store cleared"})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
